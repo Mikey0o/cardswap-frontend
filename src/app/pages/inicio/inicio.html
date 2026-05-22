@@ -1,1 +1,47 @@
-<p>inicio works!</p>
+<div style="max-width: 800px; margin: 30px auto; padding: 20px; font-family: Arial, sans-serif;">
+  
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">
+    <h1>CardSwap - Panel de Control</h1>
+    <button (click)="logout()" style="padding: 8px 15px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Cerrar Sesión
+    </button>
+  </div>
+
+  <p>Bienvenido</p>
+  <p>Rol actual: <strong>{{ userRole }}</strong></p>
+
+  @if (userRole === 'Admin' || userRole === 'admin') {
+    <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 20px; border-radius: 6px; margin-top: 20px;">
+      <h3 style="color: #721c24;"> Panel de Administración</h3>
+      <p>Tienes acceso total al sistema. Aquí podrá gestionar todas las cartas y usuarios.</p>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button style="padding: 10px; background-color: #321891; color: white; border: none; border-radius: 4px;">Crear Carta Nueva</button>
+        <button style="padding: 10px; background-color: #6c757d; color: white; border: none; border-radius: 4px;">Eliminar Cartas (DELETE)</button>
+        <button style="padding: 10px; background-color: #495057; color: white; border: none; border-radius: 4px;">Ver Listado de Usuarios</button>
+      </div>
+    </div>
+  }
+
+  @if (userRole === 'Moderador' || userRole === 'moderador') {
+    <div style="background-color: #fff3cd; border: 1px solid #ffeeba; padding: 20px; border-radius: 6px; margin-top: 20px;">
+      <h3 style="color: #856404;"> Panel de Moderación</h3>
+      <p>Tienes permisos para revisar transacciones, reportes de usuarios y validar intercambios de cartas.</p>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button style="padding: 10px; background-color: #856404; color: white; border: none; border-radius: 4px;">Revisar Reportes</button>
+        <button style="padding: 10px; background-color: #6c757d; color: white; border: none; border-radius: 4px;">Aprobar Intercambios</button>
+      </div>
+    </div>
+  }
+
+  @if (userRole === 'Trader' || userRole === 'trader') {
+    <div style="background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 20px; border-radius: 6px; margin-top: 20px;">
+      <h3 style="color: #0c5460;"> Panel del Coleccionista </h3>
+      <p>Explora el catálogo, gestiona tu mazo personal y ofrece intercambios a otros jugadores.</p>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button style="padding: 10px; background-color: #1a93a8; color: white; border: none; border-radius: 4px;">Ver Mis Cartas</button>
+        <button style="padding: 10px; background-color: #117888; color: white; border: none; border-radius: 4px;">Buscar Intercambios</button>
+      </div>
+    </div>
+  }
+
+</div>

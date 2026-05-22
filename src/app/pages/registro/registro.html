@@ -1,1 +1,40 @@
-<p>registro works!</p>
+<div style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+  <h2>Crea una cuenta</h2>
+  
+  <form (ngSubmit)="onSubmit()">
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px;">Correo Electrónico:</label>
+      <input 
+        type="email" 
+        name="email" 
+        [(ngModel)]="nuevoUsuario.email" 
+        required 
+        style="width: 100%; padding: 8px; box-sizing: border-box;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px;">Contraseña:</label>
+      <input 
+        type="password" 
+        name="password" 
+        [(ngModel)]="nuevoUsuario.password" 
+        required 
+        style="width: 100%; padding: 8px; box-sizing: border-box;">
+    </div>
+
+    @if (errorMensaje) {
+      <p style="color: red; font-size: 14px;">{{ errorMensaje }}</p>
+    }
+    @if (exitoMensaje) {
+      <p style="color: green; font-size: 14px;">{{ exitoMensaje }}</p>
+    }
+
+    <button type="submit" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Registrar
+    </button>
+  </form>
+
+  <p style="margin-top: 15px; text-align: center;">
+    ¿Ya tiene una cuenta? <a routerLink="/login">Inicia sesión</a>
+  </p>
+</div>
