@@ -1,0 +1,74 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="title">
+        <span class="title-accent">♦</span>
+        Mis Ofertas
+        <span class="title-accent">♦</span>
+      </h1>
+      <p class="subtitle">Gestiona tus intercambios de cartas</p>
+    </div>
+    <a routerLink="/offers/new" class="btn-new">
+      + Nueva Oferta
+    </a>
+  </header>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando ofertas...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="error-state" *ngIf="error && !loading">
+    <p>⚠ {{ error }}</p>
+  </div>
+
+  <!-- Sin ofertas -->
+  <div class="empty-state" *ngIf="!loading && !error && offers.length === 0">
+    <div class="empty-icon">♦</div>
+    <h3>No tienes ofertas aún</h3>
+    <p>Crea tu primera oferta de intercambio</p>
+    <a routerLink="/offers/new" class="btn-new">Crear oferta</a>
+  </div>
+
+  <!-- Lista de ofertas -->
+  <div class="offers-grid" *ngIf="!loading && offers.length > 0">
+    <div class="offer-card" *ngFor="let offer of offers">
+      <div class="card-glow"></div>
+
+      <div class="card-header">
+        <span class="offer-id">#{{ offer._id | slice:0:8 }}</span>
+        <span class="status-badge" [ngClass]="offer.status">
+          {{ getStatusLabel(offer.status) }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="trade-section">
+          <div class="trade-item">
+            <label>Ofrece</label>
+            <div class="card-info">
+              <span class="card-edition">{{ offer.idCardOffered?.edition || 'N/A' }}</span>
+              <span class="card-language">{{ offer.idCardOffered?.language || '' }}</span>
+            </div>
+          </div>
+
+          <div class="trade-arrow">⇄</div>
+
+          <div class="trade-item">
+            <label>Desea</label>
+            <div class="card-info">
+              <span class="card-edition">{{ offer.idCardWanted?.edition || 'N/A' }}</span>
+              <span class="card-language">{{ offer.idCardWanted?.language || '' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <span class="offer-date">{{ offer.createdAt | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+  </div>
+</div>
