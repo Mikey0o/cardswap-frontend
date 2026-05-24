@@ -14,14 +14,14 @@ export class OfferList implements OnInit {
   offers: any[] = [];
   loading = true;
   error = '';
-  traderId = '6a09c0536a009fff7c86fcbe';
+  traderId = localStorage.getItem('userId') ?? '';
 
   constructor(private offerService: OfferService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.offerService.getOffersByTrader(this.traderId).subscribe({
+    this.offerService.getOffers('todos').subscribe({
       next: (data) => {
-        this.offers = data;
+        this.offers = data.data ?? data;
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -41,4 +41,52 @@ export class OfferList implements OnInit {
     };
     return labels[status] || status;
   }
+
+acceptOffer(offer: any) {
+  const id = offer._id || offer.id;
+  console.log('ID de la oferta:', id);
+  console.log('Oferta completa:', offer);
+
+  if (!id) {
+    console.error("No se encontró el ID en el objeto:", offer);
+    return;
+  }
+
+  // 2. Llamamos al servicio que acabamos de crear
+  this.offerService.acceptOffer(id).subscribe({
+    next: (res) => {
+      console.log("¡Oferta aceptada con éxito!");
+      // Recargamos la lista para actualizar los estados
+      this.ngOnInit(); 
+    },
+    error: (err) => {
+      console.error("Error al aceptar la oferta:", err);
+      alert("No se pudo aceptar la oferta.");
+    }
+  });
+}
+
+rejectOffer(offer: any) {
+  const id = offer._id || offer.id;
+  this.offerService.rejectOffer(id).subscribe({
+    next: () => this.ngOnInit(),
+    error: () => alert('No se pudo rechazar la oferta.')
+  });
+}
+
+withdrawOffer(offer: any) {
+  const id = offer._id || offer.id;
+  this.offerService.withdrawOffer(id).subscribe({
+    next: () => this.ngOnInit(),
+    error: () => alert('No se pudo retirar la oferta.')
+  });
+}
+
+confirmDelivery(offer: any) {
+  const id = offer._id || offer.id;
+  this.offerService.confirmDelivery(id).subscribe({
+    next: () => this.ngOnInit(),
+    error: () => alert('No se pudo confirmar la entrega.')
+  });
+}
 }

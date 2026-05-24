@@ -6,17 +6,16 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = 'http://localhost:3000/api/v1';
 
   constructor(private http: HttpClient) { }
 
-  // Método para iniciar sesión
   login(credenciales: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/session/start`, credenciales);
-  }
+  return this.http.post(`${this.baseUrl}/auth/session/start`, credenciales, { withCredentials: true });
+  //                                   ↑ agregar /auth/
+}
 
-  // Método para registrar usuarios nuevos
   registro(datosUsuario: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/users`, datosUsuario);
+    return this.http.post(`${this.baseUrl}/users`, datosUsuario, { withCredentials: true });
   }
 }
