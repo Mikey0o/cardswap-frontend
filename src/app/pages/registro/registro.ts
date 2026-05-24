@@ -11,34 +11,39 @@ import { AuthService } from '../../services/auth';
   styleUrl: './registro.css'
 })
 
-export class RegistroComponent{
+export class RegistroComponent {
+  // Ajustamos el objeto a lo que el backend realmente espera
   nuevoUsuario = {
-    email: '',
-    password: '',
-    role: 'Trader' //por defecto el usuario se registra como trader, solo el admin puede cambiarlo
+    nombre: '',   // Nuevo campo obligatorio
+    edad: 0,      // Nuevo campo obligatorio
+    mail: '',     // Cambiado de 'email' a 'mail'
+    pass: '',     // Cambiado de 'password' a 'pass'
+    role: 'usuario' // Ajustado a los valores permitidos: "admin"|"moderador"|"usuario"
   };
 
   errorMensaje: string = '';
   exitoMensaje: string = '';
 
-  constructor(private authService: AuthService, private router: Router){}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  onSubmit(){
+  onSubmit() {
     this.errorMensaje = '';
     this.exitoMensaje = '';
 
-    this.authService.registro(this.nuevoUsuario).subscribe({
-      next: (respuesta) => {
-        console.log('Usuario registrado con exito: ', respuesta);
-        this.exitoMensaje = 'Registro Exitoso, redirigiendo...';
+    // Convertimos la edad a número por seguridad
+    const dataToSend = {
+      ...this.nuevoUsuario,
+      edad: Number(this.nuevoUsuario.edad) 
+    };
 
-        setTimeout(()=>{
-          this.router.navigate(['/login']);
-        }, 2000);
+    this.authService.registro(dataToSend).subscribe({
+      next: (respuesta) => {
+        this.exitoMensaje = 'Registro Exitoso, redirigiendo...';
+        setTimeout(() => { this.router.navigate(['/login']); }, 2000);
       },
-      error: (err)=>{
-        console.log('Error en el registro: ', err);
-        this.errorMensaje = 'No se pudo crear la cuenta. Intente de nuevo con otro correo';
+      error: (err) => {
+        console.error('Error en el registro: ', err);
+        this.errorMensaje = 'Error al registrar: ' + (err.error?.message || 'Revisa los campos');
       }
     });
   }

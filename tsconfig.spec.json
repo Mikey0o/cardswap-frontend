@@ -4,6 +4,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    "rootDir": ".",
+    "moduleResolution": "bundler",
     "types": [
       "vitest/globals"
     ]

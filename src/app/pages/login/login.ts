@@ -12,8 +12,8 @@ import { AuthService } from '../../services/auth';
 })
 export class LoginComponent{
   credenciales = {
-    email: '',
-    password: ''
+    mail: '',
+    pass: ''
   };
 
   errorMensaje: String = '';
@@ -24,11 +24,12 @@ export class LoginComponent{
     this.errorMensaje = '';
 
     this.authService.login(this.credenciales).subscribe({
-      next: (respuesta) => {
-        console.log('Exito', respuesta);
-
+  next: (respuesta: any) => {
+      if (respuesta.token) {
+        localStorage.setItem('token', respuesta.token);
+          }
         localStorage.setItem('userRole', respuesta.role);
-        this.router.navigate(['/inicio']);
+      this.router.navigate(['/inicio']);
       }
     });
   }
