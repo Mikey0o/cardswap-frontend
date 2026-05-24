@@ -13,9 +13,11 @@ import { OfferService } from '../../services/offer';
 })
 export class OfferForm {
   offerData = {
-    idTrader: '6a09c0536a009fff7c86fcbe',
-    idCardOffered: '',
-    idCardWanted: ''
+    idCard: '',
+    offerType: 'card',
+    offeredCard: '',
+    amount: 1,
+    currency: 'USD'
   };
 
   loading = false;
@@ -25,7 +27,7 @@ export class OfferForm {
   constructor(private offerService: OfferService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   onSubmit() {
-    if (!this.offerData.idCardOffered || !this.offerData.idCardWanted) {
+    if (!this.offerData.offeredCard || !this.offerData.idCard) {
       this.error = 'Todos los campos son requeridos';
       this.cdr.detectChanges();
       return;
@@ -41,8 +43,8 @@ export class OfferForm {
         this.cdr.detectChanges();
         setTimeout(() => this.router.navigate(['/offers']), 1500);
       },
-      error: () => {
-        this.error = 'Error al crear la oferta. Intenta de nuevo.';
+      error: (err) => {
+        this.error = err?.error?.message || 'Error al crear la oferta.';
         this.loading = false;
         this.cdr.detectChanges();
       }
