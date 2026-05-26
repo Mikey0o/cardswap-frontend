@@ -53,7 +53,7 @@ export class InicioComponent implements OnInit {
 
   cargarCartasGlobales() {
     // Consumimos el endpoint GET /card/:type usando 'oferta' como tipo por defecto
-    this.authService.obtenerCartasPorTipo('oferta').subscribe({
+    this.authService.obtenerCartasPorTipo('todos').subscribe({
       next: (data) => {
         console.log('Cartas cargadas con éxito:', data);
         this.cartas = data;
