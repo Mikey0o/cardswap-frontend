@@ -1,23 +1,35 @@
 <div class="page-wrapper">
+  <div class="user-info-bar">
+  <div class="user-badge">
+    <span class="user-name">{{ userName }}</span>
+    <span class="role-badge" [ngClass]="{
+      'role-admin': userRole === 'admin',
+      'role-mod': userRole === 'moderador',
+      'role-user': userRole === 'usuario'
+    }">{{ userRole }}</span>
+  </div>
   <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
+</div>
 
-  <div class="mercado-container">
+  <!-- PESTAÑAS (solo para admin) -->
+  <div *ngIf="userRole === 'admin'" class="tabs-container">
+    <button class="tab-btn" [class.active]="tabActiva === 'cartas'" (click)="tabActiva = 'cartas'">Cartas</button>
+    <button class="tab-btn" [class.active]="tabActiva === 'usuarios'" (click)="tabActiva = 'usuarios'">Usuarios</button>
+    <button class="tab-btn" [class.active]="tabActiva === 'baneados'" (click)="tabActiva = 'baneados'">Baneados</button>
+  </div>
+
+  <!-- ========== PESTAÑA CARTAS ========== -->
+  <div class="mercado-container" *ngIf="tabActiva === 'cartas'">
     <h2 style="color: #ffc107;">Mercado de Cartas en Oferta</h2>
 
     <div class="filtros-box">
       <div>
         <label>Buscar por Nombre:</label><br>
-        <input type="text" 
-               [(ngModel)]="filtroNombre" 
-               (ngModelChange)="aplicarFiltros()" 
-               placeholder="Ej: Dragón...">
+        <input type="text" [(ngModel)]="filtroNombre" (ngModelChange)="aplicarFiltros()" placeholder="Ej: Dragón...">
       </div>
       <div>
         <label>Filtrar por Edición:</label><br>
-        <input type="text" 
-               [(ngModel)]="filtroEdicion" 
-               (ngModelChange)="aplicarFiltros()" 
-               placeholder="Ej: Primera Edición">
+        <input type="text" [(ngModel)]="filtroEdicion" (ngModelChange)="aplicarFiltros()" placeholder="Ej: Primera Edición">
       </div>
       <div>
         <label>Estado/Status:</label><br>
@@ -36,6 +48,7 @@
           <th>Edición</th>
           <th>Idioma</th>
           <th>Estado</th>
+          <th *ngIf="userRole === 'admin'">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -43,15 +56,88 @@
           <td>{{ carta.nombreSimulado }}</td>
           <td>{{ carta.edition }}</td>
           <td>{{ carta.language }}</td>
-          <td>
-            <span style="color: #4ade80;">{{ carta.status }}</span>
+          <td><span style="color: #4ade80;">{{ carta.status }}</span></td>
+          <td *ngIf="userRole === 'admin'">
+            <button class="btn-danger" (click)="eliminarPublicacion(carta._id)">Eliminar</button>
           </td>
         </tr>
-        
         <tr *ngIf="cartasFiltradas.length === 0">
-          <td colspan="4" style="text-align: center; color: #888;">No se encontraron cartas con esos filtros.</td>
+          <td colspan="5" style="text-align: center; color: #888;">No se encontraron cartas.</td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <!-- ========== PESTAÑA USUARIOS ========== -->
+  <div class="mercado-container" *ngIf="userRole === 'admin' && tabActiva === 'usuarios'">
+    <h2 style="color: #ffc107;">Usuarios Registrados</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Rol Actual</th>
+          <th>Cambiar Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of usuarios">
+          <td>{{ u.nombre }}</td>
+          <td>{{ u.mail }}</td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'badge-admin': u.role === 'admin',
+              'badge-mod': u.role === 'moderador',
+              'badge-user': u.role === 'usuario'
+            }">{{ u.role }}</span>
+          </td>
+          <td>
+            <select (change)="cambiarRol(u, $any($event.target).value)">
+              <option value="">-- Cambiar --</option>
+              <option value="admin">Admin</option>
+              <option value="moderador">Moderador</option>
+              <option value="usuario">Usuario</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn-danger" (click)="ejecutarBaneo(u)">Banear</button>
+          </td>
+        </tr>
+        <tr *ngIf="usuarios.length === 0">
+          <td colspan="5" style="text-align: center; color: #888;">No hay usuarios registrados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== PESTAÑA BANEADOS ========== -->
+  <div class="mercado-container" *ngIf="userRole === 'admin' && tabActiva === 'baneados'">
+  <h2 style="color: #ffc107;">Usuarios Baneados</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Razón</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of listaBaneados">
+        <td>{{ b.nombreBaneado }}</td>
+        <td>{{ b.reason }}</td>
+        <td>{{ b.fecha }}</td>
+        <td>
+          <button class="btn-primary" (click)="desbanearUsuario(b)">Desbanear</button>
+        </td>
+      </tr>
+      <tr *ngIf="listaBaneados.length === 0">
+        <td colspan="4" style="text-align: center; color: #888;">No hay usuarios baneados.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 </div>

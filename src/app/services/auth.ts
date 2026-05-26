@@ -40,17 +40,17 @@ export class AuthService {
 
   // 3. Editar usuario / Cambiar de Rol (PUT /user/edit/:id)
   cambiarRolUsuario(id: string, datosActualizados: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/user/edit/${id}`, datosActualizados, { headers: this.getHeaders() });
+    return this.http.put(`${this.baseUrl}/users/user/edit/${id}`, datosActualizados, { headers: this.getHeaders() });
   }
 
   // 4. Listar todas las cartas globales según su tipo (GET /card/:type)
   obtenerCartasPorTipo(type: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/card/${type}`, { withCredentials: true });
+    return this.http.get(`${this.baseUrl}/cards/${type}`, { withCredentials: true });
   }
 
   // 5. Eliminar publicación / carta (DELETE /card/:id)
   eliminarCarta(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/card/${id}`, this.getOptions());
+    return this.http.delete(`${this.baseUrl}/cards/${id}`, this.getOptions());
   }
 
   // 6. Banear usuario
@@ -60,8 +60,13 @@ export class AuthService {
   }
   // 7. Cerrar sesion
   cerrarSesion(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/session/close`, {}, { withCredentials: true });
+    return this.http.post(`${this.baseUrl}/auth/session/close`, {}, { withCredentials: true });
   }
+
+  //8. metodo para listar usuarios - Administrador
+  obtenerUsuarios(): Observable<any> {
+  return this.http.get(`${this.baseUrl}/admin/users`, { headers: this.getHeaders() });
+}
 
   // Método para registrar usuarios nuevos
   /*registro(datosUsuario: any): Observable<any> {
