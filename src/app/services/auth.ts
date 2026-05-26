@@ -29,14 +29,13 @@ export class AuthService {
     })
   }
 
-// 1. Iniciar sesión
   login(credenciales: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/session/start`, credenciales, { withCredentials: true });
-  }
+  return this.http.post(`${this.baseUrl}/auth/session/start`, credenciales, { withCredentials: true });
+  //                                   ↑ agregar /auth/
+}
 
-  // 2. Registrar usuario
   registro(datosUsuario: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/users`, datosUsuario);
+    return this.http.post(`${this.baseUrl}/users`, datosUsuario, { withCredentials: true });
   }
 
   // 3. Editar usuario / Cambiar de Rol (PUT /user/edit/:id)

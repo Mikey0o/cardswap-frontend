@@ -1,0 +1,70 @@
+<div class="page">
+  <header class="page-header">
+    <a routerLink="/offers" class="btn-back">← Volver</a>
+    <h1 class="title">
+      <span class="title-accent">♦</span>
+      Nueva Oferta
+      <span class="title-accent">♦</span>
+    </h1>
+  </header>
+
+  <!-- Éxito -->
+  <div class="success-state" *ngIf="success">
+    <div class="success-icon">✓</div>
+    <h3>¡Oferta creada!</h3>
+    <p>Redirigiendo a tus ofertas...</p>
+  </div>
+
+  <!-- Formulario -->
+  <div class="form-container" *ngIf="!success">
+    <div class="form-card">
+      <div class="card-glow"></div>
+
+      <div class="form-section">
+        <label class="form-label">
+          <span class="label-icon">♦</span>
+          ID de la carta que ofreces
+        </label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="offerData.offeredCard"
+          placeholder="Ej: 6a09c0536a009fff7c86fcbe"
+        />
+        <span class="form-hint">Ingresa el ID de la carta que deseas intercambiar</span>
+      </div>
+
+      <div class="trade-divider">
+        <span>⇄</span>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">
+          <span class="label-icon">♦</span>
+          ID de la carta que deseas
+        </label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="offerData.idCard"
+          placeholder="Ej: 6a09c0536a009fff7c86fcbe"
+        />
+        <span class="form-hint">Ingresa el ID de la carta que quieres recibir</span>
+      </div>
+
+      <!-- Error -->
+      <div class="error-msg" *ngIf="error">
+        ⚠ {{ error }}
+      </div>
+
+      <button
+        class="btn-submit"
+        (click)="onSubmit()"
+        [disabled]="loading"
+      >
+        <span *ngIf="!loading">Crear Oferta</span>
+        <span *ngIf="loading">Enviando...</span>
+      </button>
+    </div>
+  </div>
+</div>
