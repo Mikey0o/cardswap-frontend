@@ -1,0 +1,37 @@
+<div style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+  <h2>Iniciar Sesión - CardSwap</h2>
+  
+  <form (ngSubmit)="onSubmit()">
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px;">Correo:</label>
+      <input 
+        type="email" 
+        name="mail" 
+        [(ngModel)]="credenciales.mail" 
+        required 
+        style="width: 100%; padding: 8px; box-sizing: border-box;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px;">Contraseña:</label>
+      <input 
+        type="password" 
+        name="pass" 
+        [(ngModel)]="credenciales.pass" 
+        required 
+        style="width: 100%; padding: 8px; box-sizing: border-box;">
+    </div>
+
+    @if (errorMensaje) {
+      <p style="color: red; font-size: 14px;">{{ errorMensaje }}</p>
+    }
+
+    <button type="submit" style="width: 100%; padding: 10px; background-color: #523cd3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Ingresar
+    </button>
+  </form>
+
+  <p style="margin-top: 15px; text-align: center;">
+    ¿No tienes cuenta? <a routerLink="/registro">Regístrate aquí</a>
+  </p>
+</div>

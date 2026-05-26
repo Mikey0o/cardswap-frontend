@@ -1,0 +1,57 @@
+<div class="page-wrapper">
+  <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
+
+  <div class="mercado-container">
+    <h2 style="color: #ffc107;">Mercado de Cartas en Oferta</h2>
+
+    <div class="filtros-box">
+      <div>
+        <label>Buscar por Nombre:</label><br>
+        <input type="text" 
+               [(ngModel)]="filtroNombre" 
+               (ngModelChange)="aplicarFiltros()" 
+               placeholder="Ej: Dragón...">
+      </div>
+      <div>
+        <label>Filtrar por Edición:</label><br>
+        <input type="text" 
+               [(ngModel)]="filtroEdicion" 
+               (ngModelChange)="aplicarFiltros()" 
+               placeholder="Ej: Primera Edición">
+      </div>
+      <div>
+        <label>Estado/Status:</label><br>
+        <select [(ngModel)]="filtroRareza" (ngModelChange)="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option value="disponible">Disponible</option>
+          <option value="vendido">Vendido</option>
+        </select>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Item / Nombre</th>
+          <th>Edición</th>
+          <th>Idioma</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let carta of cartasFiltradas">
+          <td>{{ carta.nombreSimulado }}</td>
+          <td>{{ carta.edition }}</td>
+          <td>{{ carta.language }}</td>
+          <td>
+            <span style="color: #4ade80;">{{ carta.status }}</span>
+          </td>
+        </tr>
+        
+        <tr *ngIf="cartasFiltradas.length === 0">
+          <td colspan="4" style="text-align: center; color: #888;">No se encontraron cartas con esos filtros.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
