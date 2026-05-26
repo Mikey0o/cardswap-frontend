@@ -24,7 +24,7 @@
 
 .mercado-container {
   max-width: 1000px;
-  margin: 60px auto 40px auto; /* Aumenté el margen superior para que no choque con el botón */
+  margin: 60px auto 40px auto;
   background-color: #1a1a1a;
   padding: 30px;
   border-radius: 12px;
