@@ -2,24 +2,25 @@
   <h2>Crea una cuenta</h2>
   
   <form (ngSubmit)="onSubmit()">
+    
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px;">Nombre:</label>
+      <input type="text" name="nombre" [(ngModel)]="nuevoUsuario.nombre" required style="width: 100%; padding: 8px; box-sizing: border-box;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px;">Edad:</label>
+      <input type="number" name="edad" [(ngModel)]="nuevoUsuario.edad" required style="width: 100%; padding: 8px; box-sizing: border-box;">
+    </div>
+
     <div style="margin-bottom: 15px;">
       <label style="display: block; margin-bottom: 5px;">Correo Electrónico:</label>
-      <input 
-        type="email" 
-        name="email" 
-        [(ngModel)]="nuevoUsuario.email" 
-        required 
-        style="width: 100%; padding: 8px; box-sizing: border-box;">
+      <input type="email" name="mail" [(ngModel)]="nuevoUsuario.mail" required style="width: 100%; padding: 8px; box-sizing: border-box;">
     </div>
 
     <div style="margin-bottom: 15px;">
       <label style="display: block; margin-bottom: 5px;">Contraseña:</label>
-      <input 
-        type="password" 
-        name="password" 
-        [(ngModel)]="nuevoUsuario.password" 
-        required 
-        style="width: 100%; padding: 8px; box-sizing: border-box;">
+      <input type="password" name="pass" [(ngModel)]="nuevoUsuario.pass" required style="width: 100%; padding: 8px; box-sizing: border-box;">
     </div>
 
     @if (errorMensaje) {
