@@ -36,7 +36,8 @@
         <select [(ngModel)]="filtroRareza" (ngModelChange)="aplicarFiltros()">
           <option value="">Todos</option>
           <option value="disponible">Disponible</option>
-          <option value="vendido">Vendido</option>
+          <option value="en_intercambio">En intercambio</option>
+          <option value="intercambiado">Intercambiado</option>
         </select>
       </div>
     </div>
@@ -53,7 +54,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let carta of cartasFiltradas">
-          <td>{{ carta._id }}</td>
+          <td>{{ carta.name }}</td>
           <td>{{ carta.edition }}</td>
           <td>{{ carta.language }}</td>
           <td><span style="color: #4ade80;">{{ carta.status }}</span></td>
