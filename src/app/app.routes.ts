@@ -12,5 +12,16 @@ export const routes: Routes = [
   { path: 'inicio', component: InicioComponent },
   { path: 'offers', component: OfferList },
   { path: 'offers/new', component: OfferForm },
-  { path: '**', redirectTo: 'login' }
+  {
+    path: 'cards', children: [
+      { path: 'list', loadComponent: () => import('./pages/card-list/card-list').then(m => m.CardListComponent) },
+      { path: 'new', loadComponent: () => import('./pages/card-form/card-form').then(m => m.CardFormComponent) },
+      { path: 'edit/:id', loadComponent: () => import('./pages/card-form/card-form').then(m => m.CardFormComponent) }
+    ]
+  },
+  {
+    path: 'moderator/cards',
+    loadComponent: () => import('./pages/card-review/card-review').then(m => m.CardReviewComponent)
+  },
+  { path: '**', redirectTo: 'login' },
 ];

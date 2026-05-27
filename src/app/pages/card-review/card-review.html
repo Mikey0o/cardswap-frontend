@@ -1,0 +1,184 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="title">
+        <span class="title-accent">♦</span> Panel de Revisión <span class="title-accent">♦</span>
+      </h1>
+      <p class="subtitle">Cartas pendientes de aprobación</p>
+    </div>
+  </header>
+
+  <!-- Estados UI -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando cartas pendientes...</p>
+  </div>
+
+  <div class="error-state" *ngIf="error && !loading">
+    <p>⚠ {{ error }}</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !error && pendingCards.length === 0 && rejectedCards.length === 0">
+    <div class="empty-icon">✔</div>
+    <h3>Todo al día</h3>
+    <p>No hay cartas pendientes ni rechazadas</p>
+  </div>
+
+  <!-- Lista de cartas pendientes -->
+  <div class="section-title" *ngIf="!loading && pendingCards.length > 0">
+  <span class="section-dot pending"></span> Pendientes de revisión
+</div>
+
+<div class="offers-grid" *ngIf="!loading && pendingCards.length > 0">
+  <div class="offer-card" *ngFor="let card of pendingCards">
+    <div class="card-glow"></div>
+    <div class="card-header">
+      <span class="offer-id">#{{ card._id | slice:0:8 }}</span>
+      <span class="status-badge pendiente">Pendiente</span>
+    </div>
+    <div class="card-body">
+      <div class="trade-section">
+        <div class="trade-item">
+          <label>Edición</label>
+          <div class="card-info">
+            <span class="card-edition">{{ card.edition }}</span>
+            <span class="card-language">{{ card.language }}</span>
+          </div>
+        </div>
+        <div class="trade-arrow">♦</div>
+        <div class="trade-item">
+          <label>Condición</label>
+          <div class="card-info">
+            <span class="card-edition">{{ card.condition }}</span>
+            <span class="card-language">{{ card.createdAt | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <span class="offer-date">{{ card.createdAt | date:'dd/MM/yyyy' }}</span>
+      <button class="btn-accept" (click)="openReview(card)">Revisar</button>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<!-- ── Cartas rechazadas ── -->
+<div class="section-title rejected-title" *ngIf="!loading && rejectedCards.length > 0">
+  <span class="section-dot rejected"></span> Rechazadas — revisión posterior
+</div>
+
+<div class="offers-grid" *ngIf="!loading && rejectedCards.length > 0">
+  <div class="offer-card rejected-card" *ngFor="let card of rejectedCards">
+    <div class="card-glow"></div>
+    <div class="card-header">
+      <span class="offer-id">#{{ card._id | slice:0:8 }}</span>
+      <span class="status-badge rechazado">Rechazada</span>
+    </div>
+    <div class="card-body">
+      <div class="trade-section">
+        <div class="trade-item">
+          <label>Edición</label>
+          <div class="card-info">
+            <span class="card-edition">{{ card.edition }}</span>
+            <span class="card-language">{{ card.language }}</span>
+          </div>
+        </div>
+        <div class="trade-arrow">♦</div>
+        <div class="trade-item">
+          <label>Condición</label>
+          <div class="card-info">
+            <span class="card-edition">{{ card.condition }}</span>
+            <span class="card-language">{{ card.createdAt | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+      <!-- Motivo del rechazo -->
+      <div class="reason-box">
+        <span class="reason-label">Motivo:</span>
+        <span class="reason-text">{{ card.reason }}</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <span class="offer-date">{{ card.createdAt | date:'dd/MM/yyyy' }}</span>
+      <button class="btn-accept" (click)="openReview(card)">Re-revisar</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── Panel de revisión (overlay) ── -->
+<div class="overlay" *ngIf="selectedCard" (click)="closeReview()"></div>
+
+<div class="review-panel" *ngIf="selectedCard">
+  <div class="panel-header">
+    <h2 class="panel-title">Revisando carta</h2>
+    <span class="panel-id">#{{ selectedCard._id | slice:0:8 }}</span>
+  </div>
+
+  <!-- Detalle de la carta -->
+  <div class="panel-card-info">
+    <div class="info-row">
+      <span class="info-label">Edición</span>
+      <span class="info-value">{{ selectedCard.edition }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Idioma</span>
+      <span class="info-value">{{ selectedCard.language }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Condición</span>
+      <span class="info-value">{{ selectedCard.condition }}</span>
+    </div>
+  </div>
+
+  <!-- Decisión -->
+  <div class="field-group">
+    <label class="field-label">Decisión</label>
+    <div class="options-row">
+      <button
+        type="button"
+        class="option-btn"
+        [class.active-accept]="reviewData.reviewState === 'aprobado'"
+        (click)="reviewData.reviewState = 'aprobado'; reviewData.reason = ''">
+        ✔ Aprobar
+      </button>
+      <button
+        type="button"
+        class="option-btn"
+        [class.active-reject]="reviewData.reviewState === 'rechazado'"
+        (click)="reviewData.reviewState = 'rechazado'">
+        ✖ Rechazar
+      </button>
+    </div>
+  </div>
+
+  <!-- Motivo (solo si rechaza) -->
+  <div class="field-group" *ngIf="reviewData.reviewState === 'rechazado'">
+    <label class="field-label">Motivo del rechazo</label>
+    <textarea
+      class="field-input reason-input"
+      placeholder="Explica por qué se rechaza esta carta..."
+      [(ngModel)]="reviewData.reason"
+      rows="3">
+    </textarea>
+  </div>
+
+  <div class="error-state panel-error" *ngIf="reviewError">
+    ⚠ {{ reviewError }}
+  </div>
+
+  <div class="panel-footer">
+    <button class="btn-withdraw" type="button" (click)="closeReview()">
+      Cancelar
+    </button>
+    <button
+      class="btn-new submit-btn"
+      type="button"
+      (click)="submitReview()"
+      [disabled]="reviewLoading">
+      {{ reviewLoading ? 'Enviando...' : 'Confirmar revisión' }}
+    </button>
+  </div>
+</div>

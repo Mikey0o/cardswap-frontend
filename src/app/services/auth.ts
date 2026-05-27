@@ -77,7 +77,7 @@ export class AuthService {
 
   cerrarSesion(): Observable<any> {
     return this.http.post<any>(
-      `${this.baseUrl}/session/close`,
+      `${this.baseUrl}/auth/close`,
       {},
       { withCredentials: true }
     );
