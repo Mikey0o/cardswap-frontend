@@ -1,24 +1,32 @@
 <div class="page-wrapper">
   <div class="user-info-bar">
-  <div class="user-badge">
-    <span class="user-name">{{ userName }}</span>
-    <span class="role-badge" [ngClass]="{
-      'role-admin': userRole === 'admin',
-      'role-mod': userRole === 'moderador',
-      'role-user': userRole === 'usuario'
-    }">{{ userRole }}</span>
-  </div>
-  <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
-</div>
+    <div class="nav-actions">
+      <button class="btn-home" (click)="irAInicio()">🏠 Inicio</button>
 
-  <!-- PESTAÑAS (solo para admin) -->
-  <div *ngIf="userRole === 'admin'" class="tabs-container">
+      <button class="btn-offers" (click)="irAOfertas()">
+        {{ userRole === 'admin' || userRole === 'moderador' ? '📋 Ver Todas las Ofertas' : '📋 Mis Ofertas' }}
+      </button>
+    </div>
+
+    <div class="user-badge">
+      <span class="user-name">{{ userName }}</span>
+      <span class="role-badge" [ngClass]="{
+        'role-admin': userRole === 'admin',
+        'role-mod': userRole === 'moderador',
+        'role-user': userRole === 'usuario'
+      }">{{ userRole }}</span>
+    </div>
+    <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
+  </div>
+
+  <div *ngIf="userRole === 'admin' || userRole === 'moderador'" class="tabs-container">
     <button class="tab-btn" [class.active]="tabActiva === 'cartas'" (click)="tabActiva = 'cartas'">Cartas</button>
-    <button class="tab-btn" [class.active]="tabActiva === 'usuarios'" (click)="tabActiva = 'usuarios'">Usuarios</button>
-    <button class="tab-btn" [class.active]="tabActiva === 'baneados'" (click)="tabActiva = 'baneados'">Baneados</button>
+    <button class="tab-btn" [class.active]="tabActiva === 'usuarios'" (click)="tabActiva = 'usuarios'"
+      *ngIf="userRole === 'admin'">Usuarios</button>
+    <button class="tab-btn" [class.active]="tabActiva === 'baneados'" (click)="tabActiva = 'baneados'"
+      *ngIf="userRole === 'admin'">Baneados</button>
   </div>
 
-  <!-- ========== PESTAÑA CARTAS ========== -->
   <div class="mercado-container" *ngIf="tabActiva === 'cartas'">
     <h2 style="color: #ffc107;">Mercado de Cartas en Oferta</h2>
 
@@ -49,7 +57,7 @@
           <th>Edición</th>
           <th>Idioma</th>
           <th>Estado</th>
-          <th *ngIf="userRole === 'admin'">Acciones</th>
+          <th *ngIf="userRole === 'admin' || userRole === 'moderador'">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -58,7 +66,7 @@
           <td>{{ carta.edition }}</td>
           <td>{{ carta.language }}</td>
           <td><span style="color: #4ade80;">{{ carta.status }}</span></td>
-          <td *ngIf="userRole === 'admin'">
+          <td *ngIf="userRole === 'admin' || userRole === 'moderador'">
             <button class="btn-danger" (click)="eliminarPublicacion(carta._id)">Eliminar</button>
           </td>
         </tr>
@@ -69,10 +77,8 @@
     </table>
   </div>
 
-  <!-- ========== PESTAÑA USUARIOS ========== -->
   <div class="mercado-container" *ngIf="userRole === 'admin' && tabActiva === 'usuarios'">
     <h2 style="color: #ffc107;">Usuarios Registrados</h2>
-
     <table>
       <thead>
         <tr>
@@ -106,39 +112,31 @@
             <button class="btn-danger" (click)="ejecutarBaneo(u)">Banear</button>
           </td>
         </tr>
-        <tr *ngIf="usuarios.length === 0">
-          <td colspan="5" style="text-align: center; color: #888;">No hay usuarios registrados.</td>
-        </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- ========== PESTAÑA BANEADOS ========== -->
   <div class="mercado-container" *ngIf="userRole === 'admin' && tabActiva === 'baneados'">
-  <h2 style="color: #ffc107;">Usuarios Baneados</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Razón</th>
-        <th>Fecha</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let b of listaBaneados">
-        <td>{{ b.nombreBaneado }}</td>
-        <td>{{ b.reason }}</td>
-        <td>{{ b.fecha }}</td>
-        <td>
-          <button class="btn-primary" (click)="desbanearUsuario(b)">Desbanear</button>
-        </td>
-      </tr>
-      <tr *ngIf="listaBaneados.length === 0">
-        <td colspan="4" style="text-align: center; color: #888;">No hay usuarios baneados.</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+    <h2 style="color: #ffc107;">Usuarios Baneados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Razón</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of listaBaneados">
+          <td>{{ b.nombreBaneado }}</td>
+          <td>{{ b.reason }}</td>
+          <td>{{ b.fecha }}</td>
+          <td>
+            <button class="btn-primary" (click)="desbanearUsuario(b)">Desbanear</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -1,7 +1,25 @@
 <div class="page">
   <header class="page-header">
+     <div class="header-content">
+    <h1 class="title">
+      <span class="title-accent">♦</span>
+      {{ userRole === 'admin' || userRole === 'moderador' ? 'Todas las Ofertas' : 'Mis Ofertas' }}
+      <span class="title-accent">♦</span>
+    </h1>
+    <p class="subtitle">Gestiona tus intercambios de cartas</p>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="header-actions">
+    <button class="btn-home" (click)="irAInicio()">🏠 Inicio</button>
+    <a routerLink="/offers/new" class="btn-new">+ Nueva Oferta</a>
+  </div>
     <div class="header-content">
-      <h1 class="title"><span class="title-accent">♦</span> Mis Ofertas <span class="title-accent">♦</span></h1>
+      <h1 class="title">
+        <span class="title-accent">♦</span>
+        {{ userRole === 'admin' ? 'Todas las Ofertas' : 'Mis Ofertas' }}
+        <span class="title-accent">♦</span>
+      </h1>
       <p class="subtitle">Gestiona tus intercambios de cartas</p>
     </div>
     <a routerLink="/offers/new" class="btn-new">+ Nueva Oferta</a>

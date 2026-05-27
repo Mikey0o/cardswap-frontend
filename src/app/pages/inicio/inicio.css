@@ -179,3 +179,43 @@ td span {
 .badge-admin { background: #1d4ed8; color: #fff; }
 .badge-mod   { background: #7c3aed; color: #fff; }
 .badge-user  { background: #374151; color: #fff; }
+
+/* ===== BTN-OFFERS ===== */
+.btn-offers {
+  background: linear-gradient(135deg, #a8872a, #c9a84c);
+  color: #0a0a0a;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.btn-offers:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.35);
+  background: linear-gradient(135deg, #c9a84c, #e0c060);
+}
+
+/* ===== BTN-HOME ===== */
+.btn-home {
+  background: transparent;
+  color: #c9a84c;
+  border: 1px solid #c9a84c;
+  padding: 9px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.btn-home:hover {
+  background: rgba(201, 168, 76, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(201, 168, 76, 0.2);
+}

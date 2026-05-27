@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { OfferService } from '../../services/offer';
 
 @Component({
@@ -15,8 +15,13 @@ export class OfferList implements OnInit {
   loading = true;
   error = '';
   traderId = localStorage.getItem('userId') ?? '';
+  userRole = localStorage.getItem('userRole')?.toLowerCase() ?? '';
 
-  constructor(private offerService: OfferService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private offerService: OfferService,
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.offerService.getOffers('todos').subscribe({
@@ -42,51 +47,46 @@ export class OfferList implements OnInit {
     return labels[status] || status;
   }
 
-acceptOffer(offer: any) {
-  const id = offer._id || offer.id;
-  console.log('ID de la oferta:', id);
-  console.log('Oferta completa:', offer);
-
-  if (!id) {
-    console.error("No se encontró el ID en el objeto:", offer);
-    return;
+  acceptOffer(offer: any) {
+    const id = offer._id || offer.id;
+    if (!id) {
+      console.error("No se encontró el ID en el objeto:", offer);
+      return;
+    }
+    this.offerService.acceptOffer(id).subscribe({
+      next: () => this.ngOnInit(),
+      error: (err) => {
+        console.error("Error al aceptar la oferta:", err);
+        alert("No se pudo aceptar la oferta.");
+      }
+    });
   }
 
-  // 2. Llamamos al servicio que acabamos de crear
-  this.offerService.acceptOffer(id).subscribe({
-    next: (res) => {
-      console.log("¡Oferta aceptada con éxito!");
-      // Recargamos la lista para actualizar los estados
-      this.ngOnInit(); 
-    },
-    error: (err) => {
-      console.error("Error al aceptar la oferta:", err);
-      alert("No se pudo aceptar la oferta.");
-    }
-  });
-}
+  rejectOffer(offer: any) {
+    const id = offer._id || offer.id;
+    this.offerService.rejectOffer(id).subscribe({
+      next: () => this.ngOnInit(),
+      error: () => alert('No se pudo rechazar la oferta.')
+    });
+  }
 
-rejectOffer(offer: any) {
-  const id = offer._id || offer.id;
-  this.offerService.rejectOffer(id).subscribe({
-    next: () => this.ngOnInit(),
-    error: () => alert('No se pudo rechazar la oferta.')
-  });
-}
+  withdrawOffer(offer: any) {
+    const id = offer._id || offer.id;
+    this.offerService.withdrawOffer(id).subscribe({
+      next: () => this.ngOnInit(),
+      error: () => alert('No se pudo retirar la oferta.')
+    });
+  }
 
-withdrawOffer(offer: any) {
-  const id = offer._id || offer.id;
-  this.offerService.withdrawOffer(id).subscribe({
-    next: () => this.ngOnInit(),
-    error: () => alert('No se pudo retirar la oferta.')
-  });
-}
+  confirmDelivery(offer: any) {
+    const id = offer._id || offer.id;
+    this.offerService.confirmDelivery(id).subscribe({
+      next: () => this.ngOnInit(),
+      error: () => alert('No se pudo confirmar la entrega.')
+    });
+  }
 
-confirmDelivery(offer: any) {
-  const id = offer._id || offer.id;
-  this.offerService.confirmDelivery(id).subscribe({
-    next: () => this.ngOnInit(),
-    error: () => alert('No se pudo confirmar la entrega.')
-  });
-}
+  irAInicio() {
+    this.router.navigate(['/inicio']);
+  }
 }

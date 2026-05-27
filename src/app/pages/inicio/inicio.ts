@@ -61,6 +61,9 @@ export class InicioComponent implements OnInit {
     if(this.userRole === 'admin'){
       this.cargarUsuarios();
     }
+    if (this.userRole === 'admin') {
+      this.cargarUsuarios();
+    }
   }
 
   cargarCartasGlobales() {
@@ -207,5 +210,13 @@ export class InicioComponent implements OnInit {
   if (!confirm(`¿Desea quitar el ban a ${ban.nombreBaneado}?`)) return;
   this.listaBaneados = this.listaBaneados.filter(b => b.idUser !== ban.idUser);
   alert(`${ban.nombreBaneado} ha sido desbaneado.`);
+}
+
+  irAOfertas() {
+    this.router.navigate(['/offers']);
+}
+
+irAInicio() {
+  this.router.navigate(['/inicio']);
 }
 }
