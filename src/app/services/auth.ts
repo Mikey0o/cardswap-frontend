@@ -31,7 +31,7 @@ export class AuthService {
 
   login(credenciales: any): Observable<any> {
     return this.http.post<any>(
-      `${this.baseUrl}/auth/start`,
+      `${this.baseUrl}/auth/session/start`,
       credenciales,
       { withCredentials: true }
     );
@@ -71,7 +71,7 @@ export class AuthService {
 
   //8. metodo para listar usuarios - Administrador
   obtenerUsuarios(): Observable<any> {
-  return this.http.get(`${this.baseUrl}/admin/users`, { headers: this.getHeaders() });
+  return this.http.get(`${this.baseUrl}/admin/users`, { headers: this.getHeaders(), withCredentials: true });
 }
 
   // Método para registrar usuarios nuevos
