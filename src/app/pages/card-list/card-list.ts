@@ -13,6 +13,8 @@ export class CardListComponent implements OnInit {
   cards: any[] = [];
   loading = true;
   error = '';
+  userId: string = localStorage.getItem('userId') || '';
+
 
   constructor(private cardService: CardService) { }
 
@@ -24,7 +26,7 @@ export class CardListComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.cardService.getCards('todos').subscribe({
+    this.cardService.getUserCards(this.userId).subscribe({
       next: (res) => {
         console.log('Respuesta completa del backend:', res);
         this.cards = res.data;

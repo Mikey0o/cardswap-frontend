@@ -22,6 +22,10 @@ export class CardService {
     return this.http.get(`${this.apiUrl}/detail/${id}`, { withCredentials: true });
   }
 
+  getUserCards(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/user/${userID}`, { withCredentials: true });
+  }
+
   editCard(id: string, cardData: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, cardData, { withCredentials: true });
   }

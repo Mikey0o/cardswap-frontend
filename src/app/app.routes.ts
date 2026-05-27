@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'offers/new', component: OfferForm, canActivate: [roleGuard(['usuario', 'admin'])] },
   {
     path: 'cards', children: [
-      { path: 'list', loadComponent: () => import('./pages/card-list/card-list').then(m => m.CardListComponent), canActivate: [roleGuard(["admin", "usuario"])] },
+      { path: 'list', loadComponent: () => import('./pages/card-list/card-list').then(m => m.CardListComponent), canActivate: [roleGuard(["usuario"])] },
       { path: 'new', loadComponent: () => import('./pages/card-form/card-form').then(m => m.CardFormComponent), canActivate: [roleGuard(["admin", "usuario"])] },
       { path: 'edit/:id', loadComponent: () => import('./pages/card-form/card-form').then(m => m.CardFormComponent), canActivate: [roleGuard(["admin", "usuario"])] }
     ]

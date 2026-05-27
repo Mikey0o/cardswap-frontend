@@ -23,16 +23,16 @@
           <div class="trade-item">
             <label>Ofrece</label>
             <div class="card-info">
-              <span class="card-edition">{{ offer.idCardOffered?.edition || 'N/A' }}</span>
-              <span class="card-language">{{ offer.idCardOffered?.language || '' }}</span>
+              <span class="card-edition">{{ offer.idCardOffered?.name || 'N/A' }}</span>
+              <span class="card-language"> {{ offer.idCardOffered?.edition || 'N/A' }} - {{ offer.idCardOffered?.language || '' }}</span>
             </div>
           </div>
           <div class="trade-arrow">⇄</div>
           <div class="trade-item">
             <label>Desea</label>
             <div class="card-info">
-              <span class="card-edition">{{ offer.idCardWanted?.edition || 'N/A' }}</span>
-              <span class="card-language">{{ offer.idCardWanted?.language || '' }}</span>
+              <span class="card-edition">{{ offer.idCardWanted?.name || 'N/A' }}</span>
+              <span class="card-language"> {{ offer.idCardWanted?.edition || 'N/A' }} - {{ offer.idCardWanted?.language || '' }}</span>
             </div>
           </div>
         </div>

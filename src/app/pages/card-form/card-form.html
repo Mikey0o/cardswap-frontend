@@ -28,6 +28,20 @@
     <div class="offer-card form-card">
       <div class="card-glow"></div>
 
+      <!-- Nombre -->
+      <div class="field-group">
+        <label class="field-label">Nombre</label>
+        <input
+          class="field-input"
+          type="text"
+          placeholder="Ej: Charizard Holo 1st Edition"
+          [(ngModel)]="formData.name"
+          [class.input-error]="fieldErrors['name']" />
+        <span class="field-error" *ngIf="fieldErrors['name']">
+          {{ fieldErrors['name'] }}
+        </span>
+      </div>
+
       <!-- Condición -->
       <div class="field-group">
         <label class="field-label">Condición</label>

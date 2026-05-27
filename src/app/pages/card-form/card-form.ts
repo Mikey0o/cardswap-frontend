@@ -25,8 +25,8 @@ export class CardFormComponent implements OnInit {
 
   // ── Opciones de los enums ──
   conditionOptions = [
-    { value: 'nuevo',  label: 'Nuevo' },
-    { value: 'usado',  label: 'Usado' },
+    { value: 'nuevo', label: 'Nuevo' },
+    { value: 'usado', label: 'Usado' },
     { value: 'dañado', label: 'Dañado' }
   ];
 
@@ -36,6 +36,7 @@ export class CardFormComponent implements OnInit {
 
   // ── Modelo del formulario ──
   formData = {
+    name: '',
     condition: '',
     edition: '',
     language: '',
@@ -48,7 +49,7 @@ export class CardFormComponent implements OnInit {
     private cardService: CardService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cardId = this.route.snapshot.paramMap.get('id');
@@ -66,9 +67,10 @@ export class CardFormComponent implements OnInit {
       next: (res) => {
         const card = res;
         this.formData = {
+          name: card.name,
           condition: card.condition,
-          edition:   card.edition,
-          language:  card.language,
+          edition: card.edition,
+          language: card.language,
         };
         this.loadingCard = false;
       },
@@ -81,6 +83,10 @@ export class CardFormComponent implements OnInit {
 
   validate(): boolean {
     this.fieldErrors = {};
+
+    if (!this.formData.name || this.formData.name.length < 5) {
+      this.fieldErrors['name'] = "El nombre debe tener mínimo 8 caracteres";
+    }
 
     if (!this.formData.condition) {
       this.fieldErrors['condition'] = "Selecciona una condición";
