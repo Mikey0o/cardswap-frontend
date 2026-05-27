@@ -11,41 +11,28 @@ import { AuthService } from '../../services/auth';
   styleUrl: './login.css',
 })
 export class LoginComponent {
-
   credenciales = {
     mail: '',
     pass: ''
   };
-
   errorMensaje: string = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
     this.errorMensaje = '';
-
     this.authService.login(this.credenciales).subscribe({
       next: (respuesta: any) => {
-        console.log('Éxito', respuesta);
-
-        // Save token if exists
+        console.log('Exito', respuesta);
         if (respuesta.token) {
           localStorage.setItem('token', respuesta.token);
         }
-
-        // Save user data
         localStorage.setItem('userRole', respuesta.role);
         localStorage.setItem('userId', respuesta.id);
-
-        // Redirect
+        localStorage.setItem('userName', respuesta.nombre);
         this.router.navigate(['/inicio']);
       },
-
       error: (err) => {
-        console.error(err);
         this.errorMensaje = 'Correo o contraseña incorrectos';
       }
     });

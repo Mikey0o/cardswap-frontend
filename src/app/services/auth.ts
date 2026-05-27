@@ -46,25 +46,15 @@ export class AuthService {
   }
 
   cambiarRolUsuario(id: string, datosActualizados: any): Observable<any> {
-    return this.http.put<any>(
-      `${this.baseUrl}/user/edit/${id}`,
-      datosActualizados,
-      { headers: this.getHeaders() }
-    );
+    return this.http.put(`${this.baseUrl}/users/user/edit/${id}`, datosActualizados, { headers: this.getHeaders() });
   }
 
   obtenerCartasPorTipo(type: string): Observable<any> {
-    return this.http.get<any>(
-      `${this.baseUrl}/cards/${type}`,
-      { withCredentials: true }
-    );
+    return this.http.get(`${this.baseUrl}/cards/${type}`, { withCredentials: true });
   }
 
   eliminarCarta(id: string): Observable<any> {
-    return this.http.delete<any>(
-      `${this.baseUrl}/cards/${id}`,
-      this.getOptions()
-    );
+    return this.http.delete(`${this.baseUrl}/cards/${id}`, this.getOptions());
   }
 
   banearUsuario(id: string, banData: any): Observable<any> {
@@ -76,10 +66,17 @@ export class AuthService {
   }
 
   cerrarSesion(): Observable<any> {
-    return this.http.post<any>(
-      `${this.baseUrl}/auth/close`,
-      {},
-      { withCredentials: true }
-    );
+    return this.http.post(`${this.baseUrl}/auth/session/close`, {}, { withCredentials: true });
   }
+
+  //8. metodo para listar usuarios - Administrador
+  obtenerUsuarios(): Observable<any> {
+  return this.http.get(`${this.baseUrl}/admin/users`, { headers: this.getHeaders() });
+}
+
+  // Método para registrar usuarios nuevos
+  /*registro(datosUsuario: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/users`, datosUsuario);
+  }*/
+
 }

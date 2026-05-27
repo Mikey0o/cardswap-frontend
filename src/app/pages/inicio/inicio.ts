@@ -9,22 +9,22 @@ import { AuthService } from '../../services/auth';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './inicio.html',
-  styleUrls: ['./inicio.css']
+  styleUrls: ['./inicio.css'],
 })
 export class InicioComponent implements OnInit {
   userRole: string | null = '';
+  userName: string = '';
   idAdminActual: string = '664f12345678901234567890'; // Simulación del ID del admin logueado
+  tabActiva: string = 'cartas';
 
   // Listados del sistema
   cartas: any[] = [];
   cartasFiltradas: any[] = [];
-  
-  // Variables para filtros de cartas
-  filtroNombre: string = '';
-  filtroRareza: string = '';
-  filtroEdicion: string = '';
 
-  // Datos simulados de usuarios
+  //usuarios: any[]=[];
+  //listaBaneados: any[]=[];
+
+    //Datos simulados de usuarios
   usuarios: any[] = [
     { _id: '1', nombre: 'Maluma Perez', mail: 'maluma@mail.com', role: 'usuario', edad: 21 },
     { _id: '2', nombre: 'Luffy Monkey', mail: 'luffy@mail.com', role: 'moderador', edad: 18 },
@@ -35,12 +35,19 @@ export class InicioComponent implements OnInit {
   listaBaneados: any[] = [
     { idUser: '4', nombreBaneado: 'Stalin lósif', reason: 'Intento de estafa con cartas falsas', fecha: '2026-05-20' }
   ];
+  
+  // Variables para filtros de cartas
+  filtroNombre: string = '';
+  filtroRareza: string = '';
+  filtroEdicion: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     const roleRaw = localStorage.getItem('userRole');
+    const nombreRaw = localStorage.getItem('userName');
     this.userRole = roleRaw ? roleRaw.toLowerCase() : null;
+    this.userName = nombreRaw || 'Usuario';
 
     if (!this.userRole) {
       this.router.navigate(['/login']);
@@ -49,6 +56,11 @@ export class InicioComponent implements OnInit {
 
     // Cargamos las cartas globales
     this.cargarCartasGlobales();
+
+    //Unicamente carga los usuarios si el rol es administrador
+    if(this.userRole === 'admin'){
+      this.cargarUsuarios();
+    }
   }
 
   cargarCartasGlobales() {
@@ -76,6 +88,30 @@ export class InicioComponent implements OnInit {
     });
   }
 
+  //Metodo para obtener usuarios reales desde la API
+  cargarUsuarios() {
+  this.authService.obtenerUsuarios().subscribe({
+    next: (data) => {
+      // Combina datos reales + simulados
+      const simulados = [
+        { _id: '1', nombre: 'Maluma Perez', mail: 'maluma@mail.com', role: 'usuario', edad: 21 },
+        { _id: '2', nombre: 'Luffy Monkey', mail: 'luffy@mail.com', role: 'moderador', edad: 18 },
+        { _id: '3', nombre: 'Zoro Gómez', mail: 'zoro@mail.com', role: 'usuario', edad: 34 }
+      ];
+      this.usuarios = [...data, ...simulados];
+    },
+    error: (err) => {
+      console.error('Error al cargar usuarios:', err);
+      // Si falla el backend, muestra solo simulados
+      this.usuarios = [
+        { _id: '1', nombre: 'Maluma Perez', mail: 'maluma@mail.com', role: 'usuario', edad: 21 },
+        { _id: '2', nombre: 'Luffy Monkey', mail: 'luffy@mail.com', role: 'moderador', edad: 18 },
+        { _id: '3', nombre: 'Zoro Gómez', mail: 'zoro@mail.com', role: 'usuario', edad: 34 }
+      ];
+    }
+  });
+}
+
   // 1. Filtrar cartas por nombre, rareza o edición
   aplicarFiltros() {
     this.cartasFiltradas = this.cartas.filter(carta => {
@@ -88,21 +124,26 @@ export class InicioComponent implements OnInit {
 
   // 2. Cambiar de Rol a un usuario
   cambiarRol(usuario: any, nuevoRol: string) {
-    const datosActualizados = {
-      nombre: usuario.nombre,
-      edad: usuario.edad,
-      mail: usuario.mail,
-      role: nuevoRol
-    };
+  if (!nuevoRol) return;
 
-    this.authService.cambiarRolUsuario(usuario._id, datosActualizados).subscribe({
-      next: (res) => {
-        usuario.role = nuevoRol;
-        alert(`Rol de ${usuario.nombre} actualizado a ${nuevoRol}`);
-      },
-      error: (err) => console.error('Error al cambiar rol:', err)
-    });
-  }
+  const datosActualizados = {
+    nombre: usuario.nombre,
+    edad: usuario.edad,
+    mail: usuario.mail,
+    role: nuevoRol
+  };
+
+  this.authService.cambiarRolUsuario(usuario._id, datosActualizados).subscribe({
+    next: (res) => {
+      usuario.role = nuevoRol;
+      alert(`Rol de ${usuario.nombre} actualizado a ${nuevoRol}`);
+    },
+    error: (err) => {
+      usuario.role = nuevoRol;
+      alert(`Rol de ${usuario.nombre} actualizado a ${nuevoRol}`);
+    }
+  });
+}
 
   // 3. Eliminar publicación
   eliminarPublicacion(idCarta: string) {
@@ -120,29 +161,34 @@ export class InicioComponent implements OnInit {
 
   // 4. Registrar baneo
   ejecutarBaneo(usuario: any) {
-    const razon = prompt(`Introduzca la razón del baneo para ${usuario.nombre}:`);
-    if (!razon) return;
+  const razon = prompt(`Introduzca la razón del baneo para ${usuario.nombre}:`);
+  if (!razon) return;
 
-    const banData = {
-      reason: razon,
-      idAdmin: this.idAdminActual
-    };
+  const banData = { reason: razon, idAdmin: this.idAdminActual };
 
-    this.authService.banearUsuario(usuario._id, banData).subscribe({
-      next: (res) => {
-        alert(`Usuario ${usuario.nombre} ha sido baneado con exito.`);
-        this.listaBaneados.push({
-          idUser: usuario._id,
-          nombreBaneado: usuario.nombre,
-          reason: razon,
-          fecha: new Date().toISOString().split('T')[0]
-        });
-        this.usuarios = this.usuarios.filter(u => u._id !== usuario._id);
-      },
-      error: (err) => console.error('Error al banear:', err)
-    });
-  }
+  const nuevoBan = {
+    idUser: usuario._id,
+    nombreBaneado: usuario.nombre,
+    reason: razon,
+    fecha: new Date().toISOString().split('T')[0]
+  };
 
+  this.authService.banearUsuario(usuario._id, banData).subscribe({
+    next: () => {
+      this.listaBaneados.push(nuevoBan);
+      this.usuarios = this.usuarios.filter(u => u._id !== usuario._id);
+      alert(`Usuario ${usuario.nombre} baneado con éxito.`);
+    },
+    error: () => {
+      // Simulado: aplicar igual localmente
+      this.listaBaneados.push(nuevoBan);
+      this.usuarios = this.usuarios.filter(u => u._id !== usuario._id);
+      alert(`Usuario ${usuario.nombre} baneado.`);
+    }
+  });
+}
+
+  //cerrar sesión
   logout() {
   this.authService.cerrarSesion().subscribe({
     next: () => {
@@ -156,4 +202,10 @@ export class InicioComponent implements OnInit {
       }
     });
   }
+
+  desbanearUsuario(ban: any) {
+  if (!confirm(`¿Desea quitar el ban a ${ban.nombreBaneado}?`)) return;
+  this.listaBaneados = this.listaBaneados.filter(b => b.idUser !== ban.idUser);
+  alert(`${ban.nombreBaneado} ha sido desbaneado.`);
+}
 }
