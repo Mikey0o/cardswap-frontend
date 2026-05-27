@@ -6,8 +6,19 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:3000/api/v1';
+
+  constructor() {}
+
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
 
   private getOptions() {
     return {
@@ -18,47 +29,42 @@ export class AuthService {
     };
   }
 
-  constructor() { }
-  //constructor(private http: HttpClient) { }
-
-  private getHeaders(){
-    const token = localStorage.getItem('token');
-
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    })
-  }
-
   login(credenciales: any): Observable<any> {
-  return this.http.post(`${this.baseUrl}/auth/session/start`, credenciales, { withCredentials: true });
-  //                                   ↑ agregar /auth/
-}
+    return this.http.post<any>(
+      `${this.baseUrl}/auth/start`,
+      credenciales,
+      { withCredentials: true }
+    );
+  }
 
   registro(datosUsuario: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/users`, datosUsuario, { withCredentials: true });
+    return this.http.post<any>(
+      `${this.baseUrl}/users`,
+      datosUsuario,
+      { withCredentials: true }
+    );
   }
 
-  // 3. Editar usuario / Cambiar de Rol (PUT /user/edit/:id)
   cambiarRolUsuario(id: string, datosActualizados: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/users/user/edit/${id}`, datosActualizados, { headers: this.getHeaders() });
   }
 
-  // 4. Listar todas las cartas globales según su tipo (GET /card/:type)
   obtenerCartasPorTipo(type: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/cards/${type}`, { withCredentials: true });
   }
 
-  // 5. Eliminar publicación / carta (DELETE /card/:id)
   eliminarCarta(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/cards/${id}`, this.getOptions());
   }
 
-  // 6. Banear usuario
   banearUsuario(id: string, banData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/admin/ban/${id}`, banData, { headers: this.getHeaders() });
-
+    return this.http.post<any>(
+      `${this.baseUrl}/admin/ban/${id}`,
+      banData,
+      { headers: this.getHeaders() }
+    );
   }
-  // 7. Cerrar sesion
+
   cerrarSesion(): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/session/close`, {}, { withCredentials: true });
   }

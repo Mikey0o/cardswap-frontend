@@ -1,0 +1,97 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="title">
+        <span class="title-accent">♦</span>
+        {{ isEditMode ? 'Editar Carta' : 'Nueva Carta' }}
+        <span class="title-accent">♦</span>
+      </h1>
+      <p class="subtitle">
+        {{ isEditMode ? 'Actualiza los datos de tu carta' : 'Registra una carta para intercambio' }}
+      </p>
+    </div>
+    <button class="btn-new" (click)="onCancel()">← Volver</button>
+  </header>
+
+  <!-- Cargando carta en modo edición -->
+  <div class="loading" *ngIf="loadingCard">
+    <div class="spinner"></div>
+    <p>Cargando carta...</p>
+  </div>
+
+  <div class="form-wrapper" *ngIf="!loadingCard">
+
+    <!-- Feedback -->
+    <div class="error-state" *ngIf="error">⚠ {{ error }}</div>
+    <div class="success-state" *ngIf="success">✔ {{ success }}</div>
+
+    <div class="offer-card form-card">
+      <div class="card-glow"></div>
+
+      <!-- Condición -->
+      <div class="field-group">
+        <label class="field-label">Condición</label>
+        <div class="options-row">
+          <button
+            *ngFor="let opt of conditionOptions"
+            type="button"
+            class="option-btn"
+            [class.active]="formData.condition === opt.value"
+            (click)="formData.condition = opt.value">
+            {{ opt.label }}
+          </button>
+        </div>
+        <span class="field-error" *ngIf="fieldErrors['condition']">
+          {{ fieldErrors['condition'] }}
+        </span>
+      </div>
+
+      <!-- Edición -->
+      <div class="field-group">
+        <label class="field-label">Edición</label>
+        <input
+          class="field-input"
+          type="text"
+          placeholder="Ej: Base Set 1st Edition"
+          [(ngModel)]="formData.edition"
+          [class.input-error]="fieldErrors['edition']" />
+        <span class="field-error" *ngIf="fieldErrors['edition']">
+          {{ fieldErrors['edition'] }}
+        </span>
+      </div>
+
+      <!-- Idioma -->
+      <div class="field-group">
+        <label class="field-label">Idioma</label>
+        <div class="options-row">
+          <button
+            *ngFor="let lang of languageOptions"
+            type="button"
+            class="option-btn"
+            [class.active]="formData.language === lang"
+            (click)="formData.language = lang">
+            {{ lang }}
+          </button>
+        </div>
+        <span class="field-error" *ngIf="fieldErrors['language']">
+          {{ fieldErrors['language'] }}
+        </span>
+      </div>
+
+      <!-- Acciones -->
+      <div class="card-footer form-footer">
+        <button class="btn-withdraw" type="button" (click)="onCancel()">
+          Cancelar
+        </button>
+        <button
+          class="btn-new submit-btn"
+          type="button"
+          (click)="onSubmit()"
+          [disabled]="loading">
+          {{ loading ? 'Guardando...' : (isEditMode ? 'Actualizar' : 'Publicar Carta') }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

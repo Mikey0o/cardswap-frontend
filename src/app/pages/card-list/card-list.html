@@ -1,0 +1,77 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="title">
+        <span class="title-accent">♦</span> Mis Cartas <span class="title-accent">♦</span>
+      </h1>
+      <p class="subtitle">Gestiona tu colección de cartas</p>
+    </div>
+    <a routerLink="/cards/new" class="btn-new">+ Nueva Carta</a>
+  </header>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando cartas...</p>
+  </div>
+
+  <div class="error-state" *ngIf="error && !loading">
+    <p>⚠ {{ error }}</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !error && cards.length === 0">
+    <div class="empty-icon">🃏</div>
+    <h3>No tienes cartas registradas</h3>
+    <p>Publica tu primera carta para comenzar a tradear</p>
+  </div>
+
+  <div class="offers-grid" *ngIf="!loading && cards.length > 0">
+    <div class="offer-card" *ngFor="let card of cards">
+      <div class="card-glow"></div>
+
+      <div class="card-header">
+        <span class="offer-id">#{{ card._id | slice:0:8 }}</span>
+        <span class="status-badge" [ngClass]="card.reviewState">
+          {{ getReviewLabel(card.reviewState) }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="trade-section">
+          <div class="trade-item">
+            <label>Edición</label>
+            <div class="card-info">
+              <span class="card-edition">{{ card.edition }}</span>
+              <span class="card-language">{{ card.language }}</span>
+            </div>
+          </div>
+          <div class="trade-arrow">♦</div>
+          <div class="trade-item">
+            <label>Estado</label>
+            <div class="card-info">
+              <span class="card-edition">{{ getStatusLabel(card.status) }}</span>
+              <span class="card-language">{{ card.createdAt | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reason-box" *ngIf="card.reviewState === 'rechazado'">
+          <span class="reason-label">Motivo de rechazo:</span>
+          <span class="reason-text">{{ card.reason }}</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <span class="offer-date">{{ card.createdAt | date:'dd/MM/yyyy' }}</span>
+        <div class="btn-group">
+          <a [routerLink]="['/cards/edit', card._id]" class="btn-accept">Editar</a>
+          <button
+            *ngIf="card.status === 'disponible'"
+            (click)="deleteCard(card)"
+            class="btn-reject">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
