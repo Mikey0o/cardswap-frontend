@@ -1,32 +1,28 @@
 <div class="page">
   <header class="page-header">
-     <div class="header-content">
-    <h1 class="title">
-      <span class="title-accent">♦</span>
-      {{ userRole === 'admin' || userRole === 'moderador' ? 'Todas las Ofertas' : 'Mis Ofertas' }}
-      <span class="title-accent">♦</span>
-    </h1>
-    <p class="subtitle">Gestiona tus intercambios de cartas</p>
-  </div>
-
-  <!-- Botones de acción -->
-  <div class="header-actions">
-    <button class="btn-home" (click)="irAInicio()">🏠 Inicio</button>
-    <a routerLink="/offers/new" class="btn-new">+ Nueva Oferta</a>
-  </div>
     <div class="header-content">
       <h1 class="title">
         <span class="title-accent">♦</span>
-        {{ userRole === 'admin' ? 'Todas las Ofertas' : 'Mis Ofertas' }}
+        {{ userRole === 'admin' || userRole === 'moderador' ? 'Todas las Ofertas' : 'Mis Ofertas' }}
         <span class="title-accent">♦</span>
       </h1>
       <p class="subtitle">Gestiona tus intercambios de cartas</p>
     </div>
-    <a routerLink="/offers/new" class="btn-new">+ Nueva Oferta</a>
+
+    <div class="header-actions">
+      <button class="btn-home" (click)="irAInicio()">🏠 Inicio</button>
+      <a routerLink="/offers/new" class="btn-new">+ Nueva Oferta</a>
+    </div>
   </header>
 
-  <div class="loading" *ngIf="loading"><div class="spinner"></div><p>Cargando ofertas...</p></div>
-  <div class="error-state" *ngIf="error && !loading"><p>⚠ {{ error }}</p></div>
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando ofertas...</p>
+  </div>
+  
+  <div class="error-state" *ngIf="error && !loading">
+    <p>⚠ {{ error }}</p>
+  </div>
 
   <div class="offers-grid" *ngIf="!loading && offers.length > 0">
     <div class="offer-card" *ngFor="let offer of offers">
@@ -55,38 +51,17 @@
           </div>
         </div>
       </div>
+      
       <div class="card-footer">
         <span class="offer-date">{{ offer.createdAt | date:'dd/MM/yyyy' }}</span>
         
         <div class="btn-group">
-          <!-- Dueño de la carta puede aceptar o rechazar -->
-          <button 
-            *ngIf="offer.status === 'pendiente'" 
-            (click)="acceptOffer(offer)" 
-            class="btn-accept">
-            Aceptar
-          </button>
-          <button 
-            *ngIf="offer.status === 'pendiente'" 
-            (click)="rejectOffer(offer)" 
-            class="btn-reject">
-            Rechazar
-          </button>
-          <!-- El ofertante puede retirar su oferta -->
-          <button 
-            *ngIf="offer.status === 'pendiente'" 
-            (click)="withdrawOffer(offer)" 
-            class="btn-withdraw">
-            Retirar
-          </button>
-          <!-- Confirmar entrega cuando está aceptada -->
-          <button 
-            *ngIf="offer.status === 'aceptada'" 
-            (click)="confirmDelivery(offer)" 
-            class="btn-confirm">
-            Confirmar entrega
-          </button>
+          <button *ngIf="offer.status === 'pendiente'" (click)="acceptOffer(offer)" class="btn-accept">Aceptar</button>
+          <button *ngIf="offer.status === 'pendiente'" (click)="rejectOffer(offer)" class="btn-reject">Rechazar</button>
+          <button *ngIf="offer.status === 'pendiente'" (click)="withdrawOffer(offer)" class="btn-withdraw">Retirar</button>
+          <button *ngIf="offer.status === 'aceptada'" (click)="confirmDelivery(offer)" class="btn-confirm">Confirmar entrega</button>
         </div>
       </div>
+    </div>
   </div>
 </div>
